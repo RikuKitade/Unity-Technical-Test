@@ -56,3 +56,17 @@ The tokens in the scene are currently not visible even though they were added. I
 5. **Completion**: Are all tasks fully completed as expected?
 
 Good luck, and we look forward to reviewing your implementation!
+
+
+=====
+
+Task 1
+------
+I noticed that each token was present and interactable but just not visible during a test play. So my first suspects for why the tokens 
+weren't showing up was either missing sprite references or the alpha channel on the sprite renderer is set to 0 on the Token object.
+Upon inspection, each token had missing sprites under the idle animations in the Token Instance Script. When I chekced the files for the TokenSpin.png
+Unity was not displaying the individual images of the sprite sheet, typically meaning the import settings was not set up properly.
+Solution: 
+Made the following changes to TokenSpin.png Import Settings
+1.Texture Type:  Default -> Sprite(2D and UI)
+2. Sprite Mode: Single -> Multiple
