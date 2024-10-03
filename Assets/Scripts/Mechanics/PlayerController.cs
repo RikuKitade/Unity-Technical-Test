@@ -29,6 +29,7 @@ namespace Platformer.Mechanics
 
         public JumpState jumpState = JumpState.Grounded;
         private bool stopJump;
+        private bool doubleJump;
         /*internal new*/ public Collider2D collider2d;
         /*internal new*/ public AudioSource audioSource;
         public Health health;
@@ -41,7 +42,15 @@ namespace Platformer.Mechanics
         readonly PlatformerModel model = Simulation.GetModel<PlatformerModel>();
 
         public Bounds Bounds => collider2d.bounds;
-
+        /// <summary>
+        /// Current count of how many times the player has jumped before being grounded
+        /// </summary>
+        private int jumpCount = 0;
+        /// <summary>
+        /// Max number of jumps player can perform before being grounded. Update this to increase/decreast maximum jumps.
+        /// Update this value in the Player object if you wish to change the number of jumps in game.
+        /// </summary>
+        public int maxJumpCount = 2; 
         void Awake()
         {
             health = GetComponent<Health>();
@@ -56,8 +65,13 @@ namespace Platformer.Mechanics
             if (controlEnabled)
             {
                 move.x = Input.GetAxis("Horizontal");
-                if (jumpState == JumpState.Grounded && Input.GetButtonDown("Jump"))
+                //To allow double jumping, we allow jumps both on the ground state
+                //and in-air state if the player has not jumped twice
+                if ((jumpState == JumpState.Grounded || jumpCount < maxJumpCount) && Input.GetButtonDown("Jump"))
+                {
                     jumpState = JumpState.PrepareToJump;
+                    jumpCount++;
+                }
                 else if (Input.GetButtonUp("Jump"))
                 {
                     stopJump = true;
@@ -98,13 +112,15 @@ namespace Platformer.Mechanics
                     break;
                 case JumpState.Landed:
                     jumpState = JumpState.Grounded;
+                    // Reset jump count on land
+                    jumpCount = 0;
                     break;
             }
         }
 
         protected override void ComputeVelocity()
         {
-            if (jump && IsGrounded)
+            if (jump)
             {
                 velocity.y = jumpTakeOffSpeed * model.jumpModifier;
                 jump = false;
