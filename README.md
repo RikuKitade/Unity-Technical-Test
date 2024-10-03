@@ -58,15 +58,28 @@ The tokens in the scene are currently not visible even though they were added. I
 Good luck, and we look forward to reviewing your implementation!
 
 
-=====
+================
 
 Task 1
 ------
 I noticed that each token was present and interactable but just not visible during a test play. So my first suspects for why the tokens 
 weren't showing up was either missing sprite references or the alpha channel on the sprite renderer is set to 0 on the Token object.
-Upon inspection, each token had missing sprites under the idle animations in the Token Instance Script. When I chekced the files for the TokenSpin.png
-Unity was not displaying the individual images of the sprite sheet, typically meaning the import settings was not set up properly.
+Upon inspection, each token had missing sprites under the idle animations in the Token Instance Script. When I checked the files for the TokenSpin.png,
+Unity was not displaying the individual images of the sprite sheet, typically meaning the import settings was not configured properly.
 Solution: 
 Made the following changes to TokenSpin.png Import Settings
 1.Texture Type:  Default -> Sprite(2D and UI)
 2. Sprite Mode: Single -> Multiple
+
+Task 2
+------
+The first step here was finding where the current jump logic existed, which was found in PlayerController. To keep track of how many jumps
+the player has performed in the air, I decided with using an integer rather than a boolean (i.e. hasDoubleJumped) to leave room for 
+additional jumps. Because the jump logic for a single jump already existed, I knew I needed to update 2 areas:
+1. allow players to jump while in the air as long as the # of jumps is >= 2
+2. have the landing state reset the number of jumps
+When updating logic, I prefer to take a non-invasive approach and avoid restructuring if it's not necessary. In this case, 
+updating a few conditions in ComputerVelocity(), Update(), and UpdateJumpState() did the job!
+
+
+
