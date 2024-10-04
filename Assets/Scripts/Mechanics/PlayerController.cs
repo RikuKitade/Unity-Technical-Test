@@ -50,6 +50,8 @@ namespace Platformer.Mechanics
         /// Update this value in the Player object if you wish to change the number of jumps in game.
         /// </summary>
         public int maxJumpCount = 2; 
+
+        public TokenScoreController tokenScoreController;
         void Awake()
         {
             health = GetComponent<Health>();
