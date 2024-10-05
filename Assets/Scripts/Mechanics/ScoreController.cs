@@ -1,6 +1,5 @@
 using System.Collections;
 using UnityEngine;
-using UnityEngine.UI;
 using TMPro;
 
 namespace Platformer.Mechanics
@@ -12,11 +11,11 @@ namespace Platformer.Mechanics
         // Scale factor for the "pop" effect when the score updates.
         public float popScale = 1.5f;
         // The displayed score.
-        private int currentScore = 0;
-        private int targetScore = 0;     // The target score to reach.
+        private int currentScore = 0;    
 
         private Coroutine scoreAnimationCoroutine;
-        private Vector3 originalScale;         // Store the original scale to prevent cumulative scaling.
+        // Store the original scale to prevent cumulative scaling.
+        private Vector3 originalScale;         
 
 
         void Start()
@@ -31,11 +30,8 @@ namespace Platformer.Mechanics
         /// <summary>
         /// Call this method to update the score and trigger the animation.
         /// </summary>
-        /// <param name="newScore">The new score value to display.</param>
         public void IncrementScore()
         {
-            targetScore++;
-
             // If a previous animation is running, stop it.
             if (scoreAnimationCoroutine != null)
             {
@@ -51,29 +47,27 @@ namespace Platformer.Mechanics
         /// </summary>
         private IEnumerator AnimateScore()
         {
-            while (currentScore < targetScore)
+            // Reset the scale to the original size before starting the animation.
+            scoreText.transform.localScale = originalScale;
+
+            // "Pop" the text by increasing its scale briefly for effect.
+            scoreText.transform.localScale = originalScale * popScale;
+
+            // Increment the score by 1.
+            currentScore += 1;
+            UpdateScoreDisplay(currentScore);
+
+            // Smoothly scale back the text to its original size.
+            float timeElapsed = 0.0f;
+            while (timeElapsed < animationDuration)
             {
-                // Reset the scale to the original size before starting the animation.
-                scoreText.transform.localScale = originalScale;
-
-                // "Pop" the text by increasing its scale briefly for effect.
-                scoreText.transform.localScale = originalScale * popScale;
-
-                // Increment the score by 1.
-                currentScore += 1;
-                UpdateScoreDisplay(currentScore);
-
-                // Smoothly scale back the text to its original size.
-                float timeElapsed = 0.0f;
-                while (timeElapsed < animationDuration)
-                {
-                    timeElapsed += Time.deltaTime;
-                    scoreText.transform.localScale = Vector3.Lerp(originalScale * popScale, originalScale, timeElapsed / animationDuration);
-                    yield return null;
-                }
-
+                timeElapsed += Time.deltaTime;
+                scoreText.transform.localScale = Vector3.Lerp(originalScale * popScale, originalScale, timeElapsed / animationDuration);
                 yield return null;
             }
+
+            yield return null;
+            
 
             // Ensure the text is always reset to the original size after animation.
             scoreText.transform.localScale = originalScale;

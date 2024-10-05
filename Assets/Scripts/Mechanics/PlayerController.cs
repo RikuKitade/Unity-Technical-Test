@@ -42,7 +42,7 @@ namespace Platformer.Mechanics
 
         public Bounds Bounds => collider2d.bounds;
         /// <summary>
-        /// Current count of how many times the player has jumped before being grounded
+        /// Current count of how many times the player has jumped before being grounded.
         /// </summary>
         private int jumpCount = 0;
         /// <summary>
@@ -67,7 +67,7 @@ namespace Platformer.Mechanics
             {
                 move.x = Input.GetAxis("Horizontal");
                 //To allow double jumping, we allow jumps both on the ground state
-                //and in-air state if the player has not jumped twice
+                //and in-air state if the player has not jumped twice.
                 if ((jumpState == JumpState.Grounded || jumpCount < maxJumpCount) && Input.GetButtonDown("Jump"))
                 {
                     jumpState = JumpState.PrepareToJump;
@@ -113,7 +113,7 @@ namespace Platformer.Mechanics
                     break;
                 case JumpState.Landed:
                     jumpState = JumpState.Grounded;
-                    // Reset jump count on land
+                    // Reset jump count on land.
                     jumpCount = 0;
                     break;
             }
