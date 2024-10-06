@@ -16,6 +16,11 @@ namespace Platformer.UI
         public MainUIController mainMenu;
 
         /// <summary>
+        /// 
+        /// </summary>
+        public Canvas loginMenuCanvas;
+
+        /// <summary>
         /// A list of canvas objects which are used during gameplay (when the main ui is turned off)
         /// </summary>
         public Canvas[] gamePlayCanvasii;
@@ -30,6 +35,9 @@ namespace Platformer.UI
         void OnEnable()
         {
             _ToggleMainMenu(showMainCanvas);
+            // Show the Log In Menu before the game starts
+            ToggleLoginMenu(true);
+            
         }
 
         /// <summary>
@@ -42,6 +50,17 @@ namespace Platformer.UI
             {
                 _ToggleMainMenu(show);
             }
+        }
+
+        /// <summary>
+        /// Toggles the log in menu. This is used when the user performs a successful login to 
+        /// close the login menu and proceed to the game and at the start of the application.
+        /// </summary>
+        /// <param name="show"></param>
+        public void ToggleLoginMenu(bool show)
+        {
+            Time.timeScale = show ? 0 : 1;
+            loginMenuCanvas.gameObject.SetActive(show);
         }
 
         void _ToggleMainMenu(bool show)
